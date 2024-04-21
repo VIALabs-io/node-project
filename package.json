@@ -1,0 +1,32 @@
+{
+	"name": "node-project",
+	"version": "0.5.0",
+	"description": "VIALabs Project Node",
+	"main": "src/index.ts",
+	"repository": "https://github.com/VIALabs-io/node-project.git",
+	"author": "Atlas",
+	"license": "Commercial",
+	"type": "module",
+	"private": true,
+	"scripts": {
+		"clean": "rimraf dist",
+		"build": "npm run clean && tsc",
+		"prepublishOnly": "npm run build",
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"prepare": "npm run build"
+	},
+	"dependencies": {
+		"@vialabs-io/config": "git://github.com/VIALabs-io/config.git",
+		"@vialabs-io/node-core": "git://github.com/VIALabs-io/node-core.git",
+		"dotenv": "^16.0.3",
+		"ethers": "5.7.2",
+		"os": "^0.1.2",
+		"rimraf": "^3.0.2",
+		"ts-node": "^10.9.1",
+		"tsx": "^4.7.0",
+		"typescript": "^4.9.5"
+	},
+	"devDependencies": {
+		"@types/node": "^20.6.2"
+	}
+}
