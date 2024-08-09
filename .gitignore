@@ -3,7 +3,7 @@ node_modules
 typechain
 typechain-types
 .vscode
-chains-*.json
+chain-*.json
 
 #Hardhat files
 cache

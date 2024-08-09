@@ -16,10 +16,12 @@
 		"prepare": "npm run build"
 	},
 	"dependencies": {
-		"@vialabs-io/config": "git://github.com/VIALabs-io/config.git",
-		"@vialabs-io/node-core": "git://github.com/VIALabs-io/node-core.git",
+		"@vialabs-io/contracts": "https://github.com/VIALabs-io/contracts.git",
+		"@vialabs-io/node-core": "https://github.com/VIALabs-io/node-core.git",
+		"axios": "^1.7.3",
 		"dotenv": "^16.0.3",
 		"ethers": "5.7.2",
+		"inquirer": "^10.1.8",
 		"os": "^0.1.2",
 		"rimraf": "^3.0.2",
 		"ts-node": "^10.9.1",

@@ -1,9 +1,0 @@
-#!/bin/bash
-
-while true; do
-
-    git pull && npm install &&
-    tsx dist/index.js && wait
-    sleep 30 # timeout on restart
-    
-done

@@ -1,3 +1,0 @@
-#!/bin/bash
-
-screen -S node -RR -q -m bash -c "./scripts/run"

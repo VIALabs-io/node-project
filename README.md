@@ -11,34 +11,54 @@ Ensure your system meets the following specifications to successfully install an
 - **CPU**: At least 1 CPU core
 - **Network**: Stable internet connection
 
-### Base System Setup
-To set up the VIA Project Node, follow these instructions:
+Here is the updated portion of the `README.md` with detailed instructions on what to change in the `.env` file:
 
-1. **Install Git**:
-   Open a terminal and run the following command to install Git:
-   ```bash
-   sudo apt-get install -y git
-   ```
+### Building and Running with Docker
 
-2. **Clone the Repository**:
-   Download the project source code from GitHub:
+1. **Clone the Repository**:
+   First, clone the repository to your local machine:
    ```bash
    git clone https://github.com/VIALabs-io/node-project.git
    cd node-project
    ```
 
-3. **Run the Installation Script**:
-   Execute the installation script to set up all necessary dependencies:
+2. **Create and Update the `.env` File**:
+   Create a `.env` file in the project root by copying the `.env.example` file:
    ```bash
-   bash scripts/install
+   cp .env.example .env
+   ```
+   Open the `.env` file and update the following variables:
+   - **`NODE_PRIVATE_KEY`**: This is a critical environment variable that should be set to your node's private key. It is required for the application to function correctly.
+   - **`NODE_PUBLIC_KEY`**: Set this to your node's public key for the provided private key.
+   - **`DATA_STREAM_PORT`**: This is the port that the Express server will run on. It defaults to `3000`, but you can change it if needed. If you do not provide a port, the Data Stream Server does not run.
+   - **`NODE_ENV`**: This environment variable controls the mode in which the application runs. By default, the Docker setup will run the application in `development` mode for safety. You can leave this as `development` for testing, or set it to `production` if you are ready to deploy.
+
+   Example `.env` file configuration:
+   ```env
+   DEBUG=true
+   NODE_ENV=development
+   NODE_PRIVATE_KEY=your_private_key_here
+   NODE_PUBLIC_KEY=your_public_key_here
+   DATA_STREAM_PORT=3000
    ```
 
-4. **Execute the Startup Script**:
-   Start your node using the startup script:
+3. **Build the Docker Image**:
+   Build the Docker image using the following command:
    ```bash
-   bash scripts/startup
+   docker build -t vialabs-node .
    ```
-   *Note: The node runs in the background even after closing the terminal.*
+
+4. **Run the Docker Container**:
+   Run the container using the command below. The container will automatically expose the application on port 3000 and run in development mode by default.
+   ```bash
+   docker run --env-file .env -p 3000:3000 vialabs-node
+   ```
+
+   *Note: The application will automatically start in development mode. If you wish to run it in production mode, you can set `NODE_ENV=production` when running the Docker container by using the following command:*
+   ```bash
+   docker run --env-file .env -e NODE_ENV=production -p 3000:3000 vialabs-node
+   ```
+
 
 ## Developing Custom Features
 
