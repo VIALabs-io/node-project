@@ -1,17 +1,17 @@
 # VIA Project Node
 
-Welcome to the VIA Project Node documentation. This guide outlines how to install the VIA Project Node on Ubuntu 22.04 LTS, how to develop and integrate custom features, and where to seek additional help.
+Welcome to the VIA Project Node documentation. This guide outlines how to install the VIA Project Node, how to develop and integrate custom features, and where to seek additional help.
+
+The package also contains an optional Express server which exposes an API for events that can be consumed by the `DataStreamClient`. The `DataStreamClient` example can be found in the [client-stream-example repository](https://github.com/VIALabs-io/client-stream-example), and an optional Discord integration.
 
 ## Installation
 
 ### Prerequisites
 Ensure your system meets the following specifications to successfully install and run the VIA Project Node:
-- **Operating System**: Ubuntu 22.04 LTS
+- **Operating System**: Any OS that supports Docker
 - **Memory**: Minimum of 1GB RAM
 - **CPU**: At least 1 CPU core
 - **Network**: Stable internet connection
-
-Here is the updated portion of the `README.md` with detailed instructions on what to change in the `.env` file:
 
 ### Building and Running with Docker
 
@@ -27,11 +27,10 @@ Here is the updated portion of the `README.md` with detailed instructions on wha
    ```bash
    cp .env.example .env
    ```
-   Open the `.env` file and update the following variables:
+   Open the `.env` file and update the necessary environment variables:
    - **`NODE_PRIVATE_KEY`**: This is a critical environment variable that should be set to your node's private key. It is required for the application to function correctly.
    - **`NODE_PUBLIC_KEY`**: Set this to your node's public key for the provided private key.
-   - **`DATA_STREAM_PORT`**: This is the port that the Express server will run on. It defaults to `3000`, but you can change it if needed. If you do not provide a port, the Data Stream Server does not run.
-   - **`NODE_ENV`**: This environment variable controls the mode in which the application runs. By default, the Docker setup will run the application in `development` mode for safety. You can leave this as `development` for testing, or set it to `production` if you are ready to deploy.
+   - **`DATA_STREAM_PORT`**: This is the port that the optional `DataStreamServer` will use. If not specified, it will not be started.
 
    Example `.env` file configuration:
    ```env
@@ -48,27 +47,115 @@ Here is the updated portion of the `README.md` with detailed instructions on wha
    docker build -t vialabs-node .
    ```
 
-4. **Run the Docker Container**:
-   Run the container using the command below. The container will automatically expose the application on port 3000 and run in development mode by default.
+4. **Run the Docker Container in Development Mode**:
+   Run the container using the command below:
+
    ```bash
    docker run --env-file .env -p 3000:3000 vialabs-node
    ```
 
-   *Note: The application will automatically start in development mode. If you wish to run it in production mode, you can set `NODE_ENV=production` when running the Docker container by using the following command:*
-   ```bash
-   docker run --env-file .env -e NODE_ENV=production -p 3000:3000 vialabs-node
-   ```
+   The application will start in development mode as specified by `NODE_ENV=development` in your `.env` file. 
+   
+   If `DATA_STREAM_PORT` is set, the `DataStreamServer` will be automatically started. 
 
 
-## Developing Custom Features
+### Optional DataStreamClient
 
-Custom features allow the node to interact with off-chain systems, APIs, or process offline data. These features should be developed as follows:
+The `DataStreamClient` package allows you to connect to a real-time data stream from the P2P validation network. This is particularly useful for clients or services that need to react to or process real-time events as they occur in the network. 
 
-### Feature Structure
+The `DataStreamClient` example can be found in the [client-stream-example repository](https://github.com/VIALabs-io/client-stream-example).
+
+#### Example Usage
+
+```javascript
+import { DataStreamClient } from '@vialabs-io/node-core/DataStreamClient';
+
+// Create a new instance of DataStreamClient (run local node or point to external node)
+const client = new DataStreamClient('http://localhost:3000');
+
+// Connect to the server
+client.connect(
+    (message) => {
+        // Handle incoming message
+        console.log('Received message:', message);
+    },
+    () => {
+        // On connect callback
+        console.log('Connected to server');
+    },
+    () => {
+        // On disconnect callback
+        console.log('Disconnected from server');
+    }
+);
+```
+
+
+### Optional: Discord Bot Integration
+
+The VIA Project Node offers an optional integration with Discord, allowing you to receive real-time logs of events in a specified Discord channel and interact with the node through bot commands in a dedicated command channel.
+
+#### Step 1: Create a Discord Application and Bot
+
+1. **Visit the Discord Developer Portal**:
+   Go to the [Discord Developer Portal](https://discord.com/developers/applications) and log in with your Discord account.
+
+2. **Create a New Application**:
+   - Click on the "New Application" button.
+   - Provide a name for your application (e.g., "VIA Project Node Bot") and click "Create".
+
+3. **Enable the Bot**:
+   - Navigate to the "Bot" tab on the left sidebar.
+   - Click the "Add Bot" button, and confirm by clicking "Yes, do it!".
+   - You can optionally customize your bot's avatar and username.
+
+4. **Retrieve Bot Credentials**:
+   - **Token**: Under the "Bot" tab, click the "Copy" button under "Token" to copy your bot's token. You’ll need this for your `.env` file.
+   - **Client ID**: Navigate to the "OAuth2" tab and copy the "Client ID". You’ll also need this for your `.env` file.
+
+#### Step 2: Invite the Bot to Your Server
+
+1. **Generate an OAuth2 URL**:
+   - Under the "OAuth2" tab, scroll down to "OAuth2 URL Generator".
+   - Select the "bot" scope.
+   - Under "Bot Permissions", select the following permissions:
+     - `Read Messages/View Channels`
+     - `Send Messages`
+     - `Manage Messages` (optional, for clearing bot's messages)
+     - `Use Slash Commands` (if you plan to use the command channel)
+
+2. **Invite the Bot**:
+   - Copy the generated URL and paste it into your browser.
+   - Select the server where you want to add the bot and authorize it.
+
+#### Step 3: Update Your `.env` File
+
+Add the following environment variables to your `.env` file to enable Discord integration:
+
+```env
+# OPTIONAL: Discord Bot Integration
+DISCORD_TOKEN=your_discord_bot_token_here
+DISCORD_CLIENT_ID=your_discord_client_id_here
+DISCORD_CHANNEL_ID=your_discord_channel_id_here
+DISCORD_COMMAND_CHANNEL_ID=your_discord_command_channel_id_here
+```
+
+- **`DISCORD_TOKEN`**: The token for your Discord bot (copied from the Discord Developer Portal).
+- **`DISCORD_CLIENT_ID`**: The Client ID of your Discord application.
+- **`DISCORD_CHANNEL_ID`**: The ID of the Discord channel where the bot will log real-time events.
+- **`DISCORD_COMMAND_CHANNEL_ID`**: (Optional) The ID of the Discord channel where the bot will listen for and respond to commands.
+
+### Developing Optional Custom Features
+
+Custom features allow the node to interact with off-chain systems, APIs, or process offline data. Features are not needed for basic functionality, they are only required to provide additional deeper integrations with off-chain functionality.
+
+These optional features and can be developed as follows:
+
+#### Feature Structure
 - **Location**: Custom features should reside in the `features/` directory.
 - **Interface**: Each feature must extend the `IFeature` interface which defines standard methods for feature interaction.
 
-### Creating a Feature
+#### Creating a Feature
 1. **Implement the IFeature Interface**:
    Create a new feature class that implements the `IFeature` interface. Here is the `IFeature` interface definition:
    ```typescript
@@ -92,47 +179,42 @@ Custom features allow the node to interact with off-chain systems, APIs, or proc
    import { IMessage } from '@vialabs-io/node-core/types/IMessage';
 
    class CustomFeature implements IFeature {
-       public featureId = 123;
+       public featureId = 7000000; // This is normally the correct feature ID to use in a custom project.
        public featureName = 'CustomFeature';
        public featureDescription = 'A custom feature that does something special.';
 
        async process(driver: IDriverBase, message: IMessage): Promise<IMessage> {
-           // Custom logic here
            console.log('Processing feature:', this.featureName);
+           // Custom logic here, pull information from external database, call an API
+           // or do multiple cross chain transactions. Any arbitrary code can run here
+           // and any arbitrary data can be passed back to the receiving contract:
+           //
+           // It is also possible to encode complex data structures, which are decoded
+           // on chain and able to be used by the implementing contract:
+           //
+           // message.featureReply = ethers.utils.defaultAbiCoder.encode();
+    
            return message;
        }
 
        async isMessageValid(driver: IDriverBase, message: IMessage): Promise<boolean> {
-           // Validation logic here
+           // Optional extra validation logic here - for example, off-chain KYC check or linking to
+           // an off-chain database record or authentication service. 
            return true;
        }
    }
    export default CustomFeature;
    ```
+#### Automatically Loading Features
 
-3. **Register and Load Features**:
-   - Add and export the feature from the `features/index.js` file.
-   - Automatically load features during node initialization from the `features/index.js` directory.
+To automatically load features, create your feature modules in the `src/features` directory. Ensure they are exported from the `src/features/index.ts` file. For example:
 
-### Feature Integration Example
-Here’s an example of how you can load features dynamically when initializing the node:
-```javascript
-import { Vladiator } from '@vialabs-io/node-core/Vladiator';
-import dotenv from 'dotenv';
-dotenv.config();
+##### src/features/index.ts
 
-const config = require(process.env.NODE_ENV === 'development' ? '../chains-testnet.json' : '../chains-mainnet.json');
+```typescript
+import CustomFeature from "./CustomFeature.js";
 
-try {
-    const vladiator = new Vladiator(process.env.NODE_PRIVATE_KEY, config);
-    const features = require('./features/index.js');
-    Object.keys(features).forEach(key => {
-        vladiator.loadFeature(new features[key]());
-    });
-    console.log('All features loaded successfully.');
-} catch (error) {
-    console.error('Failed to initialize node:', error);
-}
+export default [new CustomFeature()];
 ```
 
 ## Support
