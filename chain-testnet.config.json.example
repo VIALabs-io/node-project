@@ -1,0 +1,45 @@
+{
+    "aurora-testnet": {
+        "id": "1313161555",
+        "type": "EVMMV3",
+        "name": "aurora-testnet",
+        "rpc": "https://testnet.aurora.dev"
+    },
+    "avalanche-testnet": {
+        "id": "43113",
+        "type": "EVMMV3",
+        "name": "avalanche-testnet",
+        "rpc": "https://api.avax-test.network/ext/bc/C/rpc"
+    },
+    "base-sepolia": {
+        "id": "84532",
+        "type": "EVMMV3",
+        "name": "base-sepolia",
+        "rpc": "https://sepolia.base.org"
+    },
+    "opbnb-testnet": {
+        "id": "5611",
+        "type": "EVMMV3",
+        "name": "opbnb-testnet",
+        "rpc": "https://opbnb-testnet-rpc.bnbchain.org"
+    },
+    "optimism-sepolia": {
+        "id": "11155420",
+        "type": "EVMMV3",
+        "name": "optimism-sepolia",
+        "rpc": "https://sepolia.optimism.io"
+    },
+    "telos-testnet": {
+        "id": "41",
+        "type": "EVMMV3",
+        "name": "telos-testnet",
+        "rpc": "https://testnet.telos.net/evm"
+    },
+    "vitruveo-testnet": {
+        "id": "14333",
+        "type": "EVMMV3",
+        "name": "vitruveo-testnet",
+        "rpc": "https://test-rpc.vitruveo.xyz"
+    }
+}
+

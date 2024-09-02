@@ -1,0 +1,26 @@
+{
+  "ethereum-mainnet": {
+    "id": "1",
+    "type": "EVMMV3",
+    "name": "ethereum-mainnet",
+    "rpc": "https://cloudflare-eth.com"
+  },
+  "cronos-mainnet": {
+    "id": "25",
+    "type": "EVMMV3",
+    "name": "cronos-mainnet",
+    "rpc": "https://cronos-evm-rpc.publicnode.com"
+  },
+  "binance-mainnet": {
+    "id": "56",
+    "type": "EVMMV3",
+    "name": "binance-mainnet",
+    "rpc": "https://bsc-dataseed4.defibit.io"
+  },
+  "polygon-mainnet": {
+    "id": "137",
+    "type": "EVMMV3",
+    "name": "polygon-mainnet",
+    "rpc": "https://rpc-mainnet.matic.quiknode.pro"
+  }
+}
